@@ -1,0 +1,57 @@
+---
+title: "My name is something"
+author: "rayna"
+---
+
+# **Introduction**
+
+*hi hi hi hi cat cat cat cat*
+
+### My first *R* code
+
+```{r}
+#| label: setup 
+library(tidyverse)
+library(ggformula)
+library(babynames)
+```
+
+```{r}
+babynames
+```
+
+```{r}
+babynames %>% filter (name== "Aditi")
+```
+
+```{r}
+babynames %>%  filter(name=="Aditi") %>% 
+  gf_line (n~year)
+```
+
+## woah ok
+
+## cat cat cat cat
+
+```{r}
+babynames %>% filter (name== "Radhika")
+```
+
+```{r}
+babynames %>%  filter(name=="Radhika") %>% 
+  gf_line (n~year)
+```
+
+```{r}
+babynames %>% filter(name == "Preeti" | name == "Pretty")
+
+```
+
+```{}
+```
+
+```{}
+```
+
+```{}
+```
