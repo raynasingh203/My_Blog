@@ -47,20 +47,3 @@ babynames %>% filter(name == "Preeti" | name == "Pretty")
 
 ```
 
-```{}
-```
-
-```{}
-```
-
-```{}
-```
-
-```{}
-```
-
-```{r}
-
-taxi
-
-```
