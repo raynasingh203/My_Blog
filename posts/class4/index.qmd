@@ -1,3 +1,131 @@
 ---
-title: "index.qmd"
+title: "quantities.qmd in progress..."
+format: 
+  html:
+    theme: cosmo
+    css: style2.css
 ---
+
+## Quantities
+
+```{r}
+library(tidyverse)
+library(mosaic)
+library(ggformula)
+library(skimr)
+##
+library(crosstable) # Fast stats for multiple variables in table form, 
+```
+
+```{r}
+diamonds
+```
+
+```{r}
+glimpse(diamonds)
+```
+
+```{r}
+skim(diamonds)
+
+```
+
+```{r}
+inspect(diamonds)
+```
+
+```{r}
+
+gf_histogram(~price, data = diamonds) %>%
+  gf_labs(
+    title = "Plot 1A: Diamond Prices",
+    caption = "ggformula"
+  )
+```
+
+```{r}
+
+gf_histogram(~price, fill = ~color, data = diamonds) %>%
+  gf_labs(title = "Plot 3A: Diamond Prices", caption = "ggformula")
+```
+
+```{r}
+diamonds %>%
+  gf_histogram(~price, fill = ~cut, color = "black", alpha = 0.5) %>%
+  gf_facet_wrap(~cut, scales = "free_y", nrow = 2) %>%
+  gf_labs(
+    title = "Plot 3D: Prices Filled and Facetted by Cut",
+    subtitle = "Free y-scale",
+    caption = "ggformula"
+  ) %>%
+  gf_theme(theme(
+    axis.text.x =
+      element_text(
+        angle = 45,
+        hjust = 1
+      ),   # fill- ~CUT - how price of diamonds is relating to quality 
+            
+  ))
+```
+
+```{r}
+race_df <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-26/race.csv")
+rank_df <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-26/ultra_rankings.csv")
+```
+
+```{r}
+glimpse(race_df)
+```
+
+```{r}
+glimpse(rank_df)
+```
+
+```{r}
+race_df %>%
+  favstats(~distance, data = .)
+```
+
+## 
+
+```{r}
+##
+race_df %>%
+  favstats(~participants, data = .)
+```
+
+```{r}
+
+rank_df %>%
+  drop_na() %>%
+  favstats(time_in_seconds ~ gender, data = .)
+```
+
+```{r}
+## library(crosstable)
+crosstable(time_in_seconds + age ~ gender, data = rank_df) %>%
+  crosstable::as_flextable()
+```
+
+```{r}
+race_df %>%
+  count(country) %>%
+  arrange(desc(n))
+```
+
+```{r}
+race_df
+```
+
+```{r}
+
+## More bins
+gf_histogram(~price,
+  data = diamonds,
+  bins = 10
+) %>%
+  gf_labs(
+    title = "Plot 1B: Diamond Prices",
+    caption = "ggformula"
+  )
+```

@@ -1,11 +1,19 @@
 ---
-title: "My name is something"
-author: "rayna"
+title: "Trial"
+author: "Rayna"
+format:
+  html:
+    theme: cosmo
+  
+    
+
 ---
+
+
 
 # **Introduction**
 
-*hi hi hi hi cat cat cat cat*
+*hello*
 
 ### My first *R* code
 

@@ -1,0 +1,192 @@
+---
+title: "A1: summaries"
+---
+
+## Code Replication for mpg dataset
+
+```{r setup, echo=FALSE}
+suppressMessages({
+  library(tidyverse)
+  library(mosaic)
+  library(skimr)
+  library(knitr)
+  library(kableExtra)
+  library(readr)
+})
+
+```
+
+-   Reading mpg
+
+    ```{r}
+    mpg
+    ```
+
+-   Examining the data set using glimpse, inspect and skimr
+
+    ```{r}
+    dplyr::glimpse(mpg)
+    ```
+
+    ```{r}
+    mosaic::inspect(mpg)
+    ```
+
+    ```{r}
+    skimr::skim(mpg) 
+    ```
+
+-   munging
+
+    ```{r}
+    mpg_modified <- mpg %>%
+      dplyr::mutate(
+        cyl = as_factor(cyl),
+        fl = as_factor(fl),
+        drv = as_factor(drv),
+        class = as_factor(class),
+        trans = as_factor(trans)
+      )
+    glimpse(mpg_modified)
+    ```
+
+# Math Anxiety
+
+```{r}
+math_anxiety <- read_delim("../../data/MathAnxiety.csv", delim = ';')
+print(head(math_anxiety))
+
+
+```
+
+```{r}
+math_anxiety
+```
+
+# Examining the data
+
+```{r}
+dplyr::glimpse(math_anxiety)
+```
+
+```{r}
+skimr::skim(mpg) 
+
+```
+
+```{r}
+mosaic::inspect(math_anxiety)
+```
+
+```{r}
+skim(math_anxiety) %>%
+  kbl(align = "c", caption = "Skim Output for Math anxiety Dataset") %>%
+  kable_paper(full_width = F)
+```
+
+# Data Dictionary
+
+```{r, echo=FALSE}
+data_dictionary <- data.frame(
+  Variable_Name = c("Gender", "Grade", "Age", "AMAS", "RCMAS", "Arith"),
+  Data_Type = c("Factor", "Character", "Integer", "Numeric", "Numeric", "Numeric"),
+  Description = c(
+    "Gender",
+    "Grade the student is currently in",
+    "Age, /120",
+    "Type of Exam",
+    "Another Exam",
+    "Yet another exam"
+  )
+)
+print(data_dictionary)
+```
+
+# Data Munging
+
+```{r}
+mathanxiety_modified <- math_anxiety %>%
+mutate(
+    Gender = as.factor(Gender),  
+    Age = as.integer(Age / 120)   
+  )
+glimpse(mathanxiety_modified)
+```
+
+## Reading the data again
+
+```{r}
+mathanxiety_modified
+```
+
+# Questions
+
+-   Is there a difference in anxiety levels between genders across all three exams ?
+
+    ```{r}
+    mathanxiety_modified %>%
+      group_by(Gender) %>%
+      summarise(average_AMAS = mean(AMAS),   
+        average_RCMAS = mean(RCMAS),average_Arith = mean(Arith), 
+        count = n()                                
+      )
+
+    ```
+
+> ### Inferences:
+>
+> Girls seem to show higher levels of math anxiety across all exams.
+>
+> Negligible difference in the arith exam between boys and girls.
+
+## similarly for grade...
+
+-   do the anxiety levels vary based on the students' grade level.
+
+    ```{r}
+    mathanxiety_modified %>%
+      group_by(Grade) %>%
+      summarise( average_AMAS = mean(AMAS),   
+        average_RCMAS = mean(RCMAS), average_Arith = mean(Arith), 
+        count = n()                                
+      )
+
+
+    ```
+
+> ### Inferences:
+>
+> Anxiety levels seem pretty consistent across both grades.
+>
+> Primary grade student experience seem to experience higher anxiety levels, also need to take into consideration that their sample size is larger
+
+### Using favstats... overview of anxiety scores across all exams by gender
+
+-   AMA
+
+    ```{r}
+    mathanxiety_modified %>%
+      mosaic::favstats(AMAS ~ Gender, data = .) 
+    ```
+
+<!-- -->
+
+-   Arith
+
+    ```{r}
+    mathanxiety_modified %>%
+      mosaic::favstats(Arith ~ Gender, data = .) 
+    ```
+
+-   RCMAS
+
+    ```{r}
+    mathanxiety_modified %>%
+      mosaic::favstats(RCMAS ~ Gender, data = .) 
+    ```
+
+```{r}
+# Check the names of the columns in your dataset
+colnames(math_anxiety)
+
+```

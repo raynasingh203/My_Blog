@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>index.qmd – My_Blog</title>
+<title>quantities.qmd – POSTS</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -66,9 +100,12 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<link href="../../site_libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+<script src="../../site_libs/tabwid-1.1.3/tabwid.js"></script>
 
 
 <link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="style2.css">
 </head>
 
 <body class="nav-fixed fullcontent">
@@ -79,7 +116,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">My_Blog</span>
+    <span class="navbar-title">POSTS</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -90,7 +127,7 @@ ul.task-list li input[type="checkbox"] {
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
     <a class="nav-link" href="../../about.html"> 
-<span class="menu-text">About</span></a>
+<span class="menu-text">about</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
@@ -113,7 +150,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">index.qmd</h1>
+      <h1 class="title">quantities.qmd</h1>
                       </div>
   </div>
     
@@ -137,8 +174,577 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<section id="quantities" class="level2">
+<h2 class="anchored" data-anchor-id="quantities">Quantities</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mosaic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'mosaic':
+  method                           from   
+  fortify.SpatialPolygonsDataFrame ggplot2
+
+The 'mosaic' package masks several functions from core packages in order to add 
+additional features.  The original behavior of these functions should not be affected by this.
+
+Attaching package: 'mosaic'
+
+The following object is masked from 'package:Matrix':
+
+    mean
+
+The following objects are masked from 'package:dplyr':
+
+    count, do, tally
+
+The following object is masked from 'package:purrr':
+
+    cross
+
+The following object is masked from 'package:ggplot2':
+
+    stat
+
+The following objects are masked from 'package:stats':
+
+    binom.test, cor, cor.test, cov, fivenum, IQR, median, prop.test,
+    quantile, sd, t.test, var
+
+The following objects are masked from 'package:base':
+
+    max, mean, min, prod, range, sample, sum</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggformula)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'skimr'
+
+The following object is masked from 'package:mosaic':
+
+    n_missing</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(crosstable) <span class="co"># Fast stats for multiple variables in table form, </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'crosstable'
+
+The following object is masked from 'package:purrr':
+
+    compact</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>diamonds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 53,940 × 10
+   carat cut       color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43
+ 2  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31
+ 3  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31
+ 4  0.29 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63
+ 5  0.31 Good      J     SI2      63.3    58   335  4.34  4.35  2.75
+ 6  0.24 Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48
+ 7  0.24 Very Good I     VVS1     62.3    57   336  3.95  3.98  2.47
+ 8  0.26 Very Good H     SI1      61.9    55   337  4.07  4.11  2.53
+ 9  0.22 Fair      E     VS2      65.1    61   337  3.87  3.78  2.49
+10  0.23 Very Good H     VS1      59.4    61   338  4     4.05  2.39
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(diamonds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 53,940
+Columns: 10
+$ carat   &lt;dbl&gt; 0.23, 0.21, 0.23, 0.29, 0.31, 0.24, 0.24, 0.26, 0.22, 0.23, 0.…
+$ cut     &lt;ord&gt; Ideal, Premium, Good, Premium, Good, Very Good, Very Good, Ver…
+$ color   &lt;ord&gt; E, E, E, I, J, J, I, H, E, H, J, J, F, J, E, E, I, J, J, J, I,…
+$ clarity &lt;ord&gt; SI2, SI1, VS1, VS2, SI2, VVS2, VVS1, SI1, VS2, VS1, SI1, VS1, …
+$ depth   &lt;dbl&gt; 61.5, 59.8, 56.9, 62.4, 63.3, 62.8, 62.3, 61.9, 65.1, 59.4, 64…
+$ table   &lt;dbl&gt; 55, 61, 65, 58, 58, 57, 57, 55, 61, 61, 55, 56, 61, 54, 62, 58…
+$ price   &lt;int&gt; 326, 326, 327, 334, 335, 336, 336, 337, 337, 338, 339, 340, 34…
+$ x       &lt;dbl&gt; 3.95, 3.89, 4.05, 4.20, 4.34, 3.94, 3.95, 4.07, 3.87, 4.00, 4.…
+$ y       &lt;dbl&gt; 3.98, 3.84, 4.07, 4.23, 4.35, 3.96, 3.98, 4.11, 3.78, 4.05, 4.…
+$ z       &lt;dbl&gt; 2.43, 2.31, 2.31, 2.63, 2.75, 2.48, 2.47, 2.53, 2.49, 2.39, 2.…</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(diamonds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">diamonds</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">53940</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">factor</td>
+<td style="text-align: left;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: left;">ordered</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: left;">top_counts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">cut</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Ide: 21551, Pre: 13791, Ver: 12082, Goo: 4906</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">color</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">G: 11292, E: 9797, F: 9542, H: 8304</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">clarity</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">SI1: 13065, VS2: 12258, SI2: 9194, VS1: 8171</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 10%">
+<col style="width: 14%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 9%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">carat</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.80</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.40</td>
+<td style="text-align: right;">0.70</td>
+<td style="text-align: right;">1.04</td>
+<td style="text-align: right;">5.01</td>
+<td style="text-align: left;">▇▂▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">depth</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">61.75</td>
+<td style="text-align: right;">1.43</td>
+<td style="text-align: right;">43.0</td>
+<td style="text-align: right;">61.00</td>
+<td style="text-align: right;">61.80</td>
+<td style="text-align: right;">62.50</td>
+<td style="text-align: right;">79.00</td>
+<td style="text-align: left;">▁▁▇▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">table</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">57.46</td>
+<td style="text-align: right;">2.23</td>
+<td style="text-align: right;">43.0</td>
+<td style="text-align: right;">56.00</td>
+<td style="text-align: right;">57.00</td>
+<td style="text-align: right;">59.00</td>
+<td style="text-align: right;">95.00</td>
+<td style="text-align: left;">▁▇▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">price</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3932.80</td>
+<td style="text-align: right;">3989.44</td>
+<td style="text-align: right;">326.0</td>
+<td style="text-align: right;">950.00</td>
+<td style="text-align: right;">2401.00</td>
+<td style="text-align: right;">5324.25</td>
+<td style="text-align: right;">18823.00</td>
+<td style="text-align: left;">▇▂▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">x</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5.73</td>
+<td style="text-align: right;">1.12</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">4.71</td>
+<td style="text-align: right;">5.70</td>
+<td style="text-align: right;">6.54</td>
+<td style="text-align: right;">10.74</td>
+<td style="text-align: left;">▁▁▇▃▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">y</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5.73</td>
+<td style="text-align: right;">1.14</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">4.72</td>
+<td style="text-align: right;">5.71</td>
+<td style="text-align: right;">6.54</td>
+<td style="text-align: right;">58.90</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">z</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3.54</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">2.91</td>
+<td style="text-align: right;">3.53</td>
+<td style="text-align: right;">4.04</td>
+<td style="text-align: right;">31.80</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inspect</span>(diamonds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+categorical variables:  
+     name   class levels     n missing
+1     cut ordered      5 53940       0
+2   color ordered      7 53940       0
+3 clarity ordered      8 53940       0
+                                   distribution
+1 Ideal (40%), Premium (25.6%) ...             
+2 G (20.9%), E (18.2%), F (17.7%) ...          
+3 SI1 (24.2%), VS2 (22.7%), SI2 (17%) ...      
+
+quantitative variables:  
+   name   class   min     Q1  median      Q3      max         mean           sd
+1 carat numeric   0.2   0.40    0.70    1.04     5.01    0.7979397    0.4740112
+2 depth numeric  43.0  61.00   61.80   62.50    79.00   61.7494049    1.4326213
+3 table numeric  43.0  56.00   57.00   59.00    95.00   57.4571839    2.2344906
+4 price integer 326.0 950.00 2401.00 5324.25 18823.00 3932.7997219 3989.4397381
+5     x numeric   0.0   4.71    5.70    6.54    10.74    5.7311572    1.1217607
+6     y numeric   0.0   4.72    5.71    6.54    58.90    5.7345260    1.1421347
+7     z numeric   0.0   2.91    3.53    4.04    31.80    3.5387338    0.7056988
+      n missing
+1 53940       0
+2 53940       0
+3 53940       0
+4 53940       0
+5 53940       0
+6 53940       0
+7 53940       0</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gf_histogram</span>(<span class="sc">~</span>price, <span class="at">data =</span> diamonds) <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_labs</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Plot 1A: Diamond Prices"</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"ggformula"</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gf_histogram</span>(<span class="sc">~</span>price, <span class="at">fill =</span> <span class="sc">~</span>color, <span class="at">data =</span> diamonds) <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_labs</span>(<span class="at">title =</span> <span class="st">"Plot 3A: Diamond Prices"</span>, <span class="at">caption =</span> <span class="st">"ggformula"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_histogram</span>(<span class="sc">~</span>price, <span class="at">fill =</span> <span class="sc">~</span>cut, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_facet_wrap</span>(<span class="sc">~</span>cut, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">nrow =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_labs</span>(</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Plot 3D: Prices Filled and Facetted by Cut"</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Free y-scale"</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"ggformula"</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_theme</span>(<span class="fu">theme</span>(</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">element_text</span>(</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">angle =</span> <span class="dv">45</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">hjust =</span> <span class="dv">1</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>      ),   <span class="co"># fill- ~CUT - how price of diamonds is relating to quality </span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>race_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-26/race.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1207 Columns: 13
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (5): event, race, city, country, participation
+dbl  (6): race_year_id, distance, elevation_gain, elevation_loss, aid_statio...
+date (1): date
+time (1): start_time
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rank_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-26/ultra_rankings.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 137803 Columns: 8
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (4): runner, time, gender, nationality
+dbl (4): race_year_id, rank, age, time_in_seconds
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(race_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,207
+Columns: 13
+$ race_year_id   &lt;dbl&gt; 68140, 72496, 69855, 67856, 70469, 66887, 67851, 68241,…
+$ event          &lt;chr&gt; "Peak District Ultras", "UTMB®", "Grand Raid des Pyréné…
+$ race           &lt;chr&gt; "Millstone 100", "UTMB®", "Ultra Tour 160", "PERSENK UL…
+$ city           &lt;chr&gt; "Castleton", "Chamonix", "vielle-Aure", "Asenovgrad", "…
+$ country        &lt;chr&gt; "United Kingdom", "France", "France", "Bulgaria", "Turk…
+$ date           &lt;date&gt; 2021-09-03, 2021-08-27, 2021-08-20, 2021-08-20, 2021-0…
+$ start_time     &lt;time&gt; 19:00:00, 17:00:00, 05:00:00, 18:00:00, 18:00:00, 17:0…
+$ participation  &lt;chr&gt; "solo", "Solo", "solo", "solo", "solo", "solo", "solo",…
+$ distance       &lt;dbl&gt; 166.9, 170.7, 167.0, 164.0, 159.9, 159.9, 163.8, 163.9,…
+$ elevation_gain &lt;dbl&gt; 4520, 9930, 9980, 7490, 100, 9850, 5460, 4630, 6410, 31…
+$ elevation_loss &lt;dbl&gt; -4520, -9930, -9980, -7500, -100, -9850, -5460, -4660, …
+$ aid_stations   &lt;dbl&gt; 10, 11, 13, 13, 12, 15, 5, 8, 13, 23, 13, 5, 12, 15, 0,…
+$ participants   &lt;dbl&gt; 150, 2300, 600, 150, 0, 300, 0, 200, 120, 100, 300, 50,…</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(rank_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 137,803
+Columns: 8
+$ race_year_id    &lt;dbl&gt; 68140, 68140, 68140, 68140, 68140, 68140, 68140, 68140…
+$ rank            &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, NA, NA, NA,…
+$ runner          &lt;chr&gt; "VERHEUL Jasper", "MOULDING JON", "RICHARDSON Phill", …
+$ time            &lt;chr&gt; "26H 35M 25S", "27H 0M 29S", "28H 49M 7S", "30H 53M 37…
+$ age             &lt;dbl&gt; 30, 43, 38, 55, 48, 31, 55, 40, 47, 29, 48, 47, 52, 49…
+$ gender          &lt;chr&gt; "M", "M", "M", "W", "W", "M", "W", "W", "M", "M", "M",…
+$ nationality     &lt;chr&gt; "GBR", "GBR", "GBR", "GBR", "GBR", "GBR", "GBR", "GBR"…
+$ time_in_seconds &lt;dbl&gt; 95725, 97229, 103747, 111217, 117981, 118000, 120601, …</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>race_df <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">favstats</span>(<span class="sc">~</span>distance, <span class="at">data =</span> .)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> min    Q1 median     Q3   max     mean       sd    n missing
+   0 160.1  161.5 165.15 179.1 152.6187 39.87864 1207       0</code></pre>
+</div>
+</div>
+</section>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section"></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">##</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>race_df <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">favstats</span>(<span class="sc">~</span>participants, <span class="at">data =</span> .)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> min Q1 median  Q3  max     mean       sd    n missing
+   0  0     21 150 2900 120.4872 281.8337 1207       0</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>rank_df <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">favstats</span>(time_in_seconds <span class="sc">~</span> gender, <span class="at">data =</span> .)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  gender  min      Q1 median       Q3    max     mean       sd      n missing
+1      M 3600 96536.5 115845 149761.5 288000 123271.1 37615.42 101643       0
+2      W 9191 96695.0 107062 131464.0 296806 117296.5 34604.26  18341       0</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="do">## library(crosstable)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">crosstable</span>(time_in_seconds <span class="sc">+</span> age <span class="sc">~</span> gender, <span class="at">data =</span> rank_df) <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  crosstable<span class="sc">::</span><span class="fu">as_flextable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-1cb1cb16{table-layout:auto;}.cl-1caaa976{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1caaa98a{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1cace2a4{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-1cace2b8{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-1cacf9f6{background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cacf9f7{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cacfa00{background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cacfa01{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cacfa0a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cacfa0b{background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cacfa14{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1cacfa15{background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-1cb1cb16"><thead><tr style="overflow-wrap:break-word;"><th rowspan="2" class="cl-1cacf9f6"><p class="cl-1cace2a4"><span class="cl-1caaa976">label</span></p></th><th rowspan="2" class="cl-1cacf9f6"><p class="cl-1cace2a4"><span class="cl-1caaa976">variable</span></p></th><th colspan="3" class="cl-1cacf9f7"><p class="cl-1cace2a4"><span class="cl-1caaa976">gender</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-1cacfa00"><p class="cl-1cace2a4"><span class="cl-1caaa976">M</span></p></th><th class="cl-1cacfa00"><p class="cl-1cace2a4"><span class="cl-1caaa976">W</span></p></th><th class="cl-1cacfa00"><p class="cl-1cace2a4"><span class="cl-1caaa976">NA</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td rowspan="4" class="cl-1cacfa01"><p class="cl-1cace2b8"><span class="cl-1caaa98a">time_in_seconds</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">Min / Max</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">3600.0 / 2.9e+05</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">9191.0 / 3.0e+05</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">8131.0 / 2.2e+05</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">Med [IQR]</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">1.2e+05 [9.7e+04;1.5e+05]</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">1.1e+05 [9.7e+04;1.3e+05]</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">1.2e+05 [9.9e+04;1.5e+05]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">Mean (std)</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">1.2e+05 (3.8e+04)</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">1.2e+05 (3.5e+04)</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">1.2e+05 (4.4e+04)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1cacfa01"><p class="cl-1cace2b8"><span class="cl-1caaa98a">N (NA)</span></p></td><td class="cl-1cacfa01"><p class="cl-1cace2b8"><span class="cl-1caaa98a">101643 (15073)</span></p></td><td class="cl-1cacfa01"><p class="cl-1cace2b8"><span class="cl-1caaa98a">18341 (2716)</span></p></td><td class="cl-1cacfa01"><p class="cl-1cace2b8"><span class="cl-1caaa98a">28 (2)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td rowspan="4" class="cl-1cacfa0b"><p class="cl-1cace2b8"><span class="cl-1caaa98a">age</span></p></td><td class="cl-1cacfa14"><p class="cl-1cace2b8"><span class="cl-1caaa98a">Min / Max</span></p></td><td class="cl-1cacfa14"><p class="cl-1cace2b8"><span class="cl-1caaa98a">0 / 133.0</span></p></td><td class="cl-1cacfa14"><p class="cl-1cace2b8"><span class="cl-1caaa98a">0 / 81.0</span></p></td><td class="cl-1cacfa14"><p class="cl-1cace2b8"><span class="cl-1caaa98a">29.0 / 59.0</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">Med [IQR]</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">47.0 [40.0;53.0]</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">45.0 [39.0;52.0]</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">40.5 [36.0;50.5]</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">Mean (std)</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">46.4 (10.2)</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">45.3 (9.7)</span></p></td><td class="cl-1cacfa0a"><p class="cl-1cace2b8"><span class="cl-1caaa98a">41.7 (9.0)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-1cacfa15"><p class="cl-1cace2b8"><span class="cl-1caaa98a">N (NA)</span></p></td><td class="cl-1cacfa15"><p class="cl-1cace2b8"><span class="cl-1caaa98a">116716 (0)</span></p></td><td class="cl-1cacfa15"><p class="cl-1cace2b8"><span class="cl-1caaa98a">21057 (0)</span></p></td><td class="cl-1cacfa15"><p class="cl-1cace2b8"><span class="cl-1caaa98a">30 (0)</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>race_df <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(country) <span class="sc">%&gt;%</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 61 × 2
+   country            n
+   &lt;chr&gt;          &lt;int&gt;
+ 1 United States    438
+ 2 United Kingdom   110
+ 3 France            56
+ 4 Australia         46
+ 5 Sweden            46
+ 6 China             45
+ 7 Canada            32
+ 8 Spain             27
+ 9 Japan             24
+10 Poland            23
+# ℹ 51 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>race_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,207 × 13
+   race_year_id event    race  city  country date       start_time participation
+          &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;date&gt;     &lt;time&gt;     &lt;chr&gt;        
+ 1        68140 Peak Di… Mill… Cast… United… 2021-09-03 19:00      solo         
+ 2        72496 UTMB®    UTMB® Cham… France  2021-08-27 17:00      Solo         
+ 3        69855 Grand R… Ultr… viel… France  2021-08-20 05:00      solo         
+ 4        67856 Persenk… PERS… Asen… Bulgar… 2021-08-20 18:00      solo         
+ 5        70469 Runfire… 100 … uluk… Turkey  2021-08-20 18:00      solo         
+ 6        66887 Swiss A… 160KM Müns… Switze… 2021-08-15 17:00      solo         
+ 7        67851 Salomon… Salo… Foll… Norway  2021-08-14 07:00      solo         
+ 8        68241 Ultra T… 160KM Spa   Belgium 2021-08-14 07:00      solo         
+ 9        70241 Québec … QMT-… Beau… Canada  2021-08-13 22:00      solo         
+10        69945 Bunketo… BBUT… LIND… Sweden  2021-08-07 10:00      solo         
+# ℹ 1,197 more rows
+# ℹ 5 more variables: distance &lt;dbl&gt;, elevation_gain &lt;dbl&gt;,
+#   elevation_loss &lt;dbl&gt;, aid_stations &lt;dbl&gt;, participants &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="do">## More bins</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gf_histogram</span>(<span class="sc">~</span>price,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> diamonds,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">bins =</span> <span class="dv">10</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gf_labs</span>(</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Plot 1B: Diamond Prices"</span>,</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"ggformula"</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

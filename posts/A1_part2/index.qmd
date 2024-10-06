@@ -1,0 +1,256 @@
+---
+title: "A1: Counts"
+---
+
+## Code Replication
+
+```{r setup, echo=FALSE}
+suppressMessages({
+ library(tidyverse)
+library(mosaic)
+library(ggformula)
+library(skimr)
+library(readr)
+library(jsonlite)
+})
+```
+
+```         
+```
+
+```{r}
+taxi <- read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/modeldata/taxi.csv")
+taxi
+```
+
+```{r}
+glimpse(taxi)
+```
+
+```{r}
+inspect(taxi)
+```
+
+```{r}
+skim(taxi)
+```
+
+```{r}
+## Convert `dow`, `local`, and `month` into ordered factors
+taxi_modified <- taxi %>%
+  mutate(
+    dow = factor(dow,
+      levels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"),
+      labels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"),
+      ordered = TRUE
+    ),
+    ##
+    local = factor(local,
+      levels = c("no", "yes"),
+      labels = c("no", "yes"),
+      ordered = TRUE
+    ),
+    ##
+    month = factor(month,
+      levels = c("Jan", "Feb", "Mar", "Apr"),
+      labels = c("Jan", "Feb", "Mar", "Apr"),
+      ordered = TRUE
+    )
+  )
+taxi_modified %>% glimpse()
+```
+
+```{r}
+gf_bar(~tip, data = taxi_modified) %>%
+  gf_labs(title = "Plot 1A: Counts of Tipss")
+```
+
+```{r}
+taxi_modified %>%
+  gf_bar(~tip,
+    fill = ~local, 
+    position = "dodge"
+  ) %>%
+  gf_labs(title = "Plot 2A: Dodged Bar Chart")
+```
+
+```{r}
+taxi_modified %>%
+  gf_bar(~company,
+    fill = ~tip,
+    position = "fill"
+  ) %>%
+  gf_labs(title = "Plot 2A: Dodged Bar Chart") %>%
+  gf_theme(theme(axis.text.x = element_text(size = 6, angle = 45, hjust = 1)))
+```
+
+```{r}
+gf_bar(~dow, fill = ~tip, position="fill", data = taxi_modified) %>%
+  gf_labs(title = "Plot C: Counts of Tips by Day of Week")
+```
+
+```{r}
+gf_bar(~month, fill = ~tip,  data = taxi_modified) %>%
+  gf_labs(title = "Plot D: Counts of Tips by Month")
+```
+
+# Pokémon 
+
+```{r}
+pokemon <- fromJSON("https://calmcode.io/static/data/pokemon.json")
+
+
+pretty_json <- toJSON(pokemon, pretty = TRUE, auto_unbox = TRUE)
+
+
+write(pretty_json, file = "pretty_pokemon.json")
+
+
+```
+
+## Examining
+
+```{r}
+glimpse(pokemon)
+```
+
+```{r}
+skim(pokemon)
+```
+
+```{r}
+inspect(pokemon)
+```
+
+## Data munging & Data Dictionary
+
+-   tried converting list into factor, could not.
+
+-   leaving type as it is.
+
+```{r, echo=FALSE}
+data_dictionary <- data.frame(
+  Variable_Name = c("Name", "Type", "HP", "Attack", "Total"),
+  Data_Type = c("character", "factor", "integer", "integer", "integer"),
+  Description = c(
+    "The name of the Pokémon.",
+    "The type(s) of the Pokémon, affecting battle strengths and weaknesses.",
+    "Total health of the Pokémon in battles (Hit Points).",
+    "Damage dealt by the Pokémon's attacks.",
+    "Total HP overall."
+  ),
+  stringsAsFactors = FALSE  # Prevent automatic conversion to factors
+)
+
+
+print(data_dictionary)
+
+
+```
+
+## Questions 
+
+```{r}
+pokemon_summary <- pokemon %>%
+group_by(type) %>%
+summarize(avg_hp = mean(hp), avg_attack = mean(attack))
+
+pokemon_summary
+  
+```
+
+average hp and attack for each type
+
+### Abandoning this data set as list needs to be converted into factor to get accurate data viz. 
+
+# Fertility DataSet 
+
+```{r}
+fertility<- read_delim("../../data/Fertility.csv")
+print(head(fertility))
+```
+
+## Examining
+
+```{r}
+glimpse(fertility)
+```
+
+```{r}
+skim(fertility)
+```
+
+```{r}
+inspect(fertility)
+```
+
+## Data Munging and Dictionary
+
+```{r, echo=FALSE}
+data_dictionary <- data.frame(
+  Variable_Name = c("morekids", "gender1", "gender2", "hispanic", "age"),
+  Data_Type = c("factor", "factor", "factor", "factor", "integer"),
+  Description = c(
+    "do the respondents have more than 2 kids",
+    "gender of the first child",
+    "gender of the second child",
+    "are they hispanic",
+    "age"
+  ),
+  stringsAsFactors = FALSE  # Prevent automatic conversion to factors
+)
+
+
+print(data_dictionary)
+```
+
+```{r}
+fertility_modified <- fertility %>%
+mutate(
+    morekids= as.factor(morekids),  
+    gender1 = as.factor(gender1),
+    gender2 = as.factor(gender2),
+    hispanic = as.factor(hispanic),
+    other = as.factor(other),
+    
+  )
+glimpse(fertility_modified)
+```
+
+## Bar graphs 
+
+```{r}
+gf_bar(~morekids, data = fertility_modified) %>%
+  gf_labs(title = "")
+
+```
+
+-   Does the Hispanic ethnic group tend to have a higher number of children?
+
+    ```{r}
+    fertility_modified %>%
+      gf_bar(~morekids, 
+             fill = ~hispanic, 
+             position = "dodge") %>%
+      
+      gf_labs(title = "Plot: Dodged Bar Chart")
+    ```
+
+> #### Inferences
+>
+> -   majority, regardless of their ethnicity, indicate they do not have more kids.
+>
+> -   vast majority of hispanic respondents seem to not have more kids.
+
+```{r}
+fertility_modified %>%
+  gf_bar(~morekids, 
+         fill = ~gender1, 
+         position = "dodge") %>%
+  
+  gf_labs(title = "Plot: Dodged Bar Chart")
+```
+
+> #### Inference
+>
+> -   people with male kids as their firstborn prefer to not have more kids.

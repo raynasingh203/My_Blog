@@ -1,1 +1,14 @@
-/* css styles */
+
+@font-face {
+  font-family: 'OrbitronMedium';
+  src: url('fonts/Orbitron-Medium.ttf') format('truetype');
+}
+
+
+body {
+  background-image: url('images/PIXE5.png'); 
+  background-size: cover; 
+ 
+  background-position: center; 
+  font-family: 'OrbitronMedium', sans-serif; 
+}
