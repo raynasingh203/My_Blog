@@ -1,0 +1,127 @@
+---
+title: "A2-Dataset-3"
+format:
+  html:
+    css: styles.css
+---
+
+# Movie Profits
+
+```{r setup, echo=FALSE}
+suppressMessages({
+library(tidyverse)
+library(mosaic)
+library(skimr)
+library(ggformula)
+library(knitr)
+})
+```
+
+------------------------------------------------------------------------
+
+<button>[Reading & Examining the Data]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+movieprofit <- read_delim("../../data/movie_profit.csv")
+print(head(movieprofit))
+
+```
+
+```{r}
+glimpse(movieprofit)
+```
+
+```{r}
+inspect(movieprofit)
+```
+
+```{r}
+skim(movieprofit)
+```
+
+------------------------------------------------------------------------
+
+<button>[Data Munging and Data Dictionary]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+movieprofit_modified<- movieprofit %>%
+  mutate(
+    mpaa_rating = as.factor(mpaa_rating),
+    genre = as.factor(genre),
+    decade = as.factor(decade)
+  )
+glimpse(movieprofit_modified)
+```
+
+```{r}
+data_dictionary <- data.frame(
+  Variable = c("release_date", "movie", "production_budget", "domestic_gross",
+               "worldwide_gross", "distributor", "mpaa_rating", "genre", 
+               "profit_ratio", "decade"),
+  Data_Type = c("Date", "Character", "Numeric", "Numeric",
+                "Numeric", "Character", "Factor", "Factor", 
+                "Numeric", "Factor"),
+  Description = c("The release date of the movie", "Title of the movie", 
+                  "Budget allocated for the movie", "Gross revenue earned domestically", 
+                  "Total gross revenue worldwide", "Company distributing the movie", 
+                  "Rating assigned by the MPAA", "Genre of the movie", 
+                  "Ratio of profit to production budget", "decade in which the movie was released")
+)
+
+
+kable(data_dictionary)
+```
+
+-   **Qualitative Variables**: movie, distributor, mpaa_rating, genre, decade
+
+-   **Quantitative Variables**: production_budget, domestic_gross, worldwide_gross, profit_ratio
+
+-   **Temporal Variable**: release_date
+
+------------------------------------------------------------------------
+
+<button>[Plotting graphs]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+
+gf_bar(genre ~ profit_ratio | distributor, data = movieprofit_modified) 
+
+```
+
+```{r}
+glimpse(movieprofit_modified)
+```
+
+```{r}
+median_profit_data <- movieprofit_modified %>%
+  group_by(genre, distributor) %>%
+  summarize(median_profit_ratio = median(profit_ratio), .groups = "drop")  
+
+
+ggplot(median_profit_data, aes(x = median_profit_ratio, y = genre)) +
+  geom_col() +  
+  facet_wrap(~ distributor) + 
+  labs(
+    title = "ratio of profits to genre",
+    x = "Median Profit Ratio",
+    y = "Genre"
+  ) 
+
+
+```
+
+-   horizontal bar plots
+
+-   genre and median of profit ratio are the two variables being plotted
+
+-    action and horror
+
+-   facet_wrap(\~ distributor) to get separate plots for each distributor
+
+-   would have hate to mutate and calculate profit ratio

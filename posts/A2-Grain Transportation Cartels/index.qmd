@@ -1,0 +1,252 @@
+---
+title: "A-2 Dataset-1"
+format:
+  html:
+    css: styles.css
+---
+
+# Grain Transportation Cartels
+
+```{r setup, echo=FALSE}
+suppressMessages({
+library(tidyverse)
+library(mosaic)
+library(skimr)
+library(ggformula)
+library(htmltools)
+library(knitr)
+library(kableExtra)
+})
+```
+
+------------------------------------------------------------------------
+
+<button>[Background Research]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+# Defining Terms & the Context 
+
+## [Weekly time series data on joint executive committee's railroad cartel from 1800 to 1886 ]{style="color: #98B926;"}
+
+Porter, Robert H. “A Study of Cartel Stability: The Joint Executive Committee, 1880-1886.” *The Bell Journal of Economics* 14, no. 2 (1983): 301–14. https://doi.org/10.2307/3003634.
+
+-The study analyses how the cartel's pricing strategy evolved over time 
+
+-Oligopoly- market structure with a small number of firms, none of which can keep the others from having significant influence.
+
+-Testing whether fluctuations in the grains' prices and quantities were due to the change in the cartel's cooperation level or simply external factors like shifts in demand and cost conditions.
+
+\-<u>Cartels tend to oscillate between these two modes of behaviour? Did they do that in This case?</u>
+
+\-**Behaviours**
+
+-   **Collusive**
+
+    -   Firms work together to maximise their joint profits; involves agreements to set prices, limit production, market sharing etc, may artificially restrict supply to raise prices.
+
+-   **Noncooperative**
+
+    -   Firms act independently and compete with each other to focus on their individual prices.
+
+        May lead to price wars, increased production.
+
+-A cartel is a group of independent market participants who collude with each other as well as agreeing not to compete with each other in order to improve their profits and dominate the market. —*wikipedia description of cartels*
+
+#### -***trigger price strategy***
+
+-firms set a specific price point (Trigger price),that, if undercut by a competitor to gain market share, will prompt a reaction from other firms in the market.
+
+-the reaction aims to restore the competitive equilibrium.
+
+-goal is to discourage firms from lowering prices as It might lead to price wars.
+
+-mechanism to sustain higher prices in oligopolistic markets.
+
+### **JEC CASE STUDY** features
+
+-   several instances where the cartel thought cheating had occurred, cut prices for a time and then returned to the collusive price
+
+-   price, rather than quantity was used as the strategic variable of firms (cartels) in the rail-freight industry
+
+-   wheat transported was subsequently exported overseas and the pricing was adjusted to compensated for variations in ocean shipping rates.
+
+-   lake steamers and sailships were the principal source of competition for the railroads
+
+-   predictable fluctuations in demand caused by the annual opening and closing of the Great Lakes shipping season did not disrupt industry behaviour. Rates were systematically adjusted in line with the lake navigation schedule
+
+-   conduct of JEC was largely following a collusive equilibrium as price wars were caused by unpredictable disturbances rather than by predictable fluctuations in demand.
+
+------------------------------------------------------------------------
+
+<button>[Examining the Data]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+cartelstability <- read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/AER/CartelStability.csv")
+cartelstability
+```
+
+```{r echo = TRUE, collapse = TRUE}
+glimpse(cartelstability)
+```
+
+```{r}
+inspect(cartelstability)
+```
+
+------------------------------------------------------------------------
+
+<button>[Data Munging & Creating Data Dictionary]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+cartelstability_modified <- cartelstability %>%
+  mutate(
+    cartel = case_when(
+      cartel == "yes" ~ "Cartel operational",
+      cartel == "no" ~ "Cartel not operational",
+      TRUE ~ "Unknown"  
+    ) %>% as.factor(), 
+    season = as.factor(season),
+    ice = case_when(
+         ice=="yes"~ "lakes frozen",
+         ice=="no" ~ "lakes normal",
+         TRUE ~ "Unknown") %>% as.factor()
+  )
+
+glimpse(cartelstability_modified)
+```
+
+#### Qual variables- Cartel, Season, Ice
+
+#### Quant variables- Price, Quantity
+
+#### [we refer back to the time interval mentioned in our description "weekly time series" to appropriately define our variables]{style="color: #005928;"}
+
+#### [-to analyse price trends on a weekly basis, a price index seems to have been used to better analyse the market trends.]{style="color: #005928;"}
+
+```{r, echo=FALSE}
+data_dictionary <- data.frame(
+  Variables = c("Price", "Cartel", "Quantity", "Season", "Ice"),
+  Data_types = c("Float", "Factor", "Float", "Factor", "Factor"),
+  Desc = c(
+    "Price index for shipping grains (on a weekly basis)",   "Cartel involvement ",
+    "Quantity of grains (in tonnes)",
+    "time period",
+    "presence of ice in the great lakes"
+  )
+)
+
+kable(data_dictionary)
+```
+
+------------------------------------------------------------------------
+
+<button>[Understanding the data some more]{.button_top}</button>
+
+```{r}
+cartelstability_modified %>%
+  select(season, cartel) %>%
+  head(50)
+
+
+```
+
+------------------------------------------------------------------------
+
+------------------------------------------------------------------------
+
+```{r}
+colnames(cartelstability)
+```
+
+```{r}
+cartel_summary <- cartelstability_modified %>%
+  group_by(season, cartel, ice) %>%
+  summarize(avg_price = mean(price, na.rm = TRUE), .groups = 'drop')  
+
+glimpse(cartelstability_modified)
+```
+
+```{r}
+cartel_summary <- cartelstability_modified %>%
+  group_by(season, cartel, ice) %>%
+  summarize(avg_price_index = mean(price), .groups = 'drop')
+
+glimpse(cartel_summary)
+```
+
+```{r}
+kable(cartel_summary, 
+      caption = "Summary of Cartel Data by Season, Cartel, and Ice Status") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F)
+
+```
+
+not ordered
+
+|                                                    |
+|:---------------------------------------------------|
+| <button>[Research questions]{.button_top}</button> |
+
+-   opening and closing of the lakes was a predictable fluctuation in demand, when the cartels were operating what behaviour did they adopt?
+
+-   when the cartels were not operative what was the market trend like, did it trigger price wars?
+
+-   under which conditions (lakes frozen or not), did the cartels benefit the most?
+
+------------------------------------------------------------------------
+
+<button>[Plotting graphs]{.button_top}</button>
+
+```{r}
+
+ggplot(data=cartel_summary, aes(x = season, y = avg_price_index, color = cartel, group = cartel)) +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  labs(
+    title = "Price Index per ton of grain transported",
+    x = "Season",
+    y = "Avg Price Index"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
+    plot.subtitle = element_text(hjust = 0.5, size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+
+
+```
+
+#### facet the plot by lakes frozen not frozen
+
+```{r}
+ggplot(data = cartel_summary, aes(x = season, y = avg_price_index, color = cartel, group = cartel)) +
+  geom_line(size = 1) + 
+  geom_point(size = 3) + 
+  labs(
+    title = "Price Index per ton of grain transported",
+    x = "Season",
+    y = "Avg Price Index"
+  ) +
+  facet_wrap(~ ice, ncol = 2, labeller = labeller(ice = c("frozen" = "lakes frozen", "not frozen" = "lakes normal"))) +
+  theme_minimal(base_size = 14) + 
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
+    plot.subtitle = element_text(hjust = 0.5, size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )  
+
+```
+
+## Inferences
+
+-   When lakes are frozen, and cartels are operative, the price index is higher than when the cartels are not operating. Lakes being frozen reduces competition for the railways. cartels can enter collusive agreements and gain market power.
+
+-   when lakes are not frozen, and cartels are operational, the price index fluctuates yet is still high, showing how external competition (shipping), increases competition among cartels, they might follow noncooperative behaviour and trigger price may get undercut in the process.

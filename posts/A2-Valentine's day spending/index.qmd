@@ -1,0 +1,130 @@
+---
+title: "A2-Dataset-2"
+format:
+  html:
+    css: styles.css
+---
+
+# Valentine's Day Spending
+
+```{r setup, echo=FALSE}
+suppressMessages({
+library(tidyverse)
+library(mosaic)
+library(skimr)
+library(ggformula)
+library(ggprism)
+library(kableExtra)
+  library(ggnewscale)
+})
+```
+
+------------------------------------------------------------------------
+
+<button>[Examining the Data]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+gifts_age <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2024/2024-02-13/gifts_age.csv")
+glimpse(gifts_age)
+```
+
+```{r}
+inspect(gifts_age)
+```
+
+------------------------------------------------------------------------
+
+<button>[Data Munging & Creating Data Dictionary]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+giftsage_modified <- gifts_age %>%
+   mutate(Age = as.factor(Age))
+giftsage_modified
+```
+
+```{r, echo=FALSE}
+data_dictionary <- data.frame(
+  Variables = c("Age", "SpendingCelebrating", "Candy", "Flowers", "Jewelry", 
+                "GreetingCards", "EveningOut", "Clothing", "GiftCards"),
+  Data_types = c("Factor-qual", "Float-quant", "Float-quant", "Float-quant", "Float-quant", 
+                 "Float-quant", "Float-quant", "Float-quant", "Float-quant"),
+  Desc = c(
+    "Age group",
+    "Average spending on celebrations",
+    "Average spending on candy",
+    "Average spending on flowers",
+    "Average spending on jewelry",
+    "Average spending on greeting cards ",
+    "Average spending on evening outings",
+    "Average spending on clothing ",
+    "Average spending on gift cards"
+  )
+)
+
+
+kable(data_dictionary)
+```
+
+------------------------------------------------------------------------
+
+<button>[Research Questions]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+Dependent variable- spending
+
+Independent variable - age
+
+-Relation between age and gift categories
+
+-what are the valentine's day spending trends across different age groups
+
+What research activity might have been carried out to obtain the data graphed here?
+
+-   surveys
+
+-   reports on consumer spending
+
+------------------------------------------------------------------------
+
+<button>[plotting graph]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+data_long <-gifts_age %>%
+  pivot_longer(cols = -Age, names_to = "Category", values_to = "AmountSpent") 
+
+ggplot(data_long, aes(x = Age, y = AmountSpent, color = Category, group = Category)) +
+  geom_line(size = 1) +  
+  geom_point(size = 2) +  
+  labs(title = "Spending by Age Group",
+       x = "Age Group",
+       y = "Amount Spent",
+       color = "Spending Category") +
+  theme_minimal() +  
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  
+
+```
+
+### Pre processing: wide to long where all spending categories are combined in one column which becomes our amount spent. 
+
+```{r}
+colnames(giftsage_modified)
+```
+
+```{r}
+colnames(gifts_age)
+```
+
+## Observations/surprises
+
+-Did not expect spending on jewellery to be high among the younger age brackets.
+
+\- had a preconceived notion that the 65+ age group would have considerable amounts of spending in the jewellery and flowers categories
+
+-did not expect candy to be plotted so high up either especially for the older age groups.

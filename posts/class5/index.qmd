@@ -1,0 +1,112 @@
+---
+title: "groups"
+---
+
+# Groups
+
+```{r}
+library(tidyverse)
+library(mosaic)
+library(ggformula)
+library(palmerpenguins)# Our new favourite dataseti
+library(skimr)
+```
+
+### min max median 1st quartile 3rd quartile
+
+when we want to compare multiple distributions
+
+```{r}
+wages <- read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/stevedata/gss_wages.csv")
+```
+
+## examining
+
+```{r}
+glimpse(wages)
+```
+
+```{r}
+inspect(wages)
+```
+
+```{r}
+skim(wages)
+```
+
+## dictionary & munging
+
+```{r}
+wages_modified <-
+  wages %>%
+  tidyr::drop_na(realrinc)
+
+```
+
+## graphs
+
+```{r}
+wages_modified %>%
+  gf_boxplot(realrinc ~ "Income") %>% # Dummy X-axis "variable"
+  gf_labs(
+    title = "Plot 1A: Income has a skewed distribution",
+    subtitle = "Many outliers on the high side"
+  )
+```
+
+```{r}
+wages_modified %>%
+  gf_boxplot("Income" ~ realrinc) %>%  # Swapping axes for a horizontal boxplot
+  gf_labs(
+    title = "Plot 1A: Income has a skewed distribution",
+    subtitle = "Many outliers on the high side"
+  )
+
+```
+
+### is income affected by gender
+
+```{r}
+
+wages_modified %>%
+  gf_boxplot(gender ~ realrinc) %>%
+  gf_labs(title = "Plot 2A: Income by Gender")
+```
+
+```{r}
+wages_modified %>%
+  gf_boxplot(gender ~ log10(realrinc)) %>% ##reduces effect of extreme values 
+  gf_labs(title = "Plot 2B: Log(Income) by Gender")
+```
+
+```{r}
+
+wages_modified %>%
+  gf_boxplot(gender ~ realrinc, fill = ~gender) %>%
+  gf_refine(scale_x_log10()) %>%
+  gf_labs(title = "Plot 2C: Income filled by Gender, log scale")
+```
+
+real rinc against educcat (degrees)
+
+```{r}
+wages_modified <-
+  wages %>%
+  tidyr::drop_na(educcat)
+```
+
+```{r}
+
+wages_modified %>%
+  gf_boxplot(educcat ~ realrinc) %>%
+  gf_labs(title = "Plot 3A: Income by Education Category")
+```
+
+-   many outliers, individual in each category earn significantly more hten others
+
+```{r}
+wages_modified %>%
+  gf_boxplot(log10(realrinc) ~ educcat) %>%
+  gf_labs(title = "Plot 3A: Income by Education Category")
+
+```

@@ -1,0 +1,104 @@
+---
+title: "Change"
+---
+
+```{r}
+library(tidyverse) # Tidy data processing and plotting
+library(ggformula) # Formula based plots
+library(mosaic) # Our go-to package
+library(skimr) # Another Data inspection package
+library(kableExtra) # Making good tables with data
+
+library(GGally) # Corr plots
+library(corrplot) # More corrplots
+library(ggExtra) # Making Combination Plots
+
+# devtools::install_github("rpruim/Lock5withR")
+library(Lock5withR) # Datasets
+library(palmerpenguins) # A famous dataset
+
+library(easystats) # Easy Statistical Analysis and Charts
+library(correlation) # Different Types of Correlations
+# From the easystats collection of packages
+```
+
+```{r}
+HollywoodMovies2011 -> movies
+glimpse(movies)
+```
+
+```{r}
+inspect(movies)
+```
+
+```{r}
+movies_quant <- movies %>%
+  drop_na() %>%
+  select(where(is.numeric))
+movies_quant
+```
+
+```{r}
+movies %>%
+  gf_point(DomesticGross ~ WorldGross) %>%
+  gf_lm() %>%
+  gf_labs(
+    title = "Scatter Plot",
+    subtitle = "Movie Gross Earnings: Domestics vs World"
+   )
+```
+
+```{r}
+movies %>%
+  gf_point(Profitability ~ Budget) %>%
+  gf_lm() %>%
+  gf_labs(
+    title = "Scatter Plot",
+    subtitle = "Movie Gross Earnings: profitiability vs Budget"
+   )
+```
+
+```{r}
+movies %>%
+  gf_point(Profitability ~ AudienceScore) %>%
+  gf_lm() %>%
+  gf_labs(
+    title = "Scatter Plot",
+    
+   )
+```
+
+```{r}
+# names(movies_quant)
+
+GGally::ggpairs(
+  movies %>% drop_na(),
+  # Select Quant variables only for now
+  columns = c(
+    "RottenTomatoes", "AudienceScore", "DomesticGross", "ForeignGross", "Budget"
+  ),
+  switch = "both",
+  # axis labels in more traditional locations(left and bottom)
+
+  progress = FALSE,
+  # no compute progress messages needed
+
+  # Choose the diagonal graphs (always single variable! Think!)
+  diag = list(continuous = "barDiag"),
+  # choosing histogram,not density
+
+  # Choose lower triangle graphs, two-variable graphs
+  lower = list(continuous = wrap("smooth", alpha = 0.3, se = FALSE)),
+  title = "Movies Data Correlations Plot #1"
+)
+```
+
+```{r}
+movies %>%
+  gf_point(Profitability ~ AudienceScore) %>%
+  gf_lm() %>%
+  gf_labs(
+    title = "Scatter Plot"
+    
+   )
+```

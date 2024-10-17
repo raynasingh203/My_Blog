@@ -1,0 +1,88 @@
+---
+title: "index"
+---
+
+```{r}
+library(tidyverse)
+library(mosaic)
+library(ggformula)
+library(infer)
+library(broom) # Clean test results in tibble form
+library(resampledata) # Datasets from Chihara and Hesterberg's book
+library(openintro) # More datasets
+```
+
+```{r}
+set.seed(40)  # for replication
+# Data as individual vectors ( for t.tests etc)
+y <- rnorm(50, mean = 2, sd = 2)
+
+# And as tibble too
+mydata <- tibble(y = y)
+mydata
+```
+
+##tibble- dataframe
+
+##y \<- rnorm- generate 50 random numbers
+
+##so we have vector(array?) y with 50 normally distributed random numbers - data is symetrically distribted around the mean
+
+```{r}
+mydata %>%
+    gf_density(~y) %>% ##distribution of y values 
+    gf_fitdistr(dist = "dnorm") %>% ##normal distribution based on mean and sd? always a symmetrical bell curve 
+    gf_labs(title = "Densities of Original Data Variables", subtitle = "Compared with Normal Density")
+
+```
+
+```{r}
+# t-test
+t1 <- mosaic::t_test(
+          y, # Name of variable
+          mu = 0, # belief of population mean
+          alternative = "two.sided") %>% # Check both sides
+  
+  broom::tidy() # Make results presentable, and plottable!!
+t1
+```
+
+```{r}
+mean_belief_pop <- 0  # Assert our belief
+# Sample Mean
+mean_y <- mean(y)
+mean_y
+```
+
+```{r}
+## Sample standard error
+std_error <- sd(y)/sqrt(length(y))
+std_error
+```
+
+```{r}
+## Confidence Interval of Observed Mean
+conf_int <- tibble(ci_low = mean_y - 1.96 * std_error, ci_high = mean_y + 1.96 *
+    std_error)
+conf_int
+```
+
+```{r}
+## Difference between actual and believed mean
+mean_diff <- mean_y - mean_belief_pop
+mean_diff
+```
+
+```{r}
+## Test Statistic
+t <- mean_diff/std_error
+t
+```
+
+##sample mean is 2.04, likelihood of zero being the mean is very low
+
+#p value, t-test
+
+##based on the assumption that our sample is a bell curve
+
+##permutation

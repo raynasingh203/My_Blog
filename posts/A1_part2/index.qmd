@@ -94,7 +94,7 @@ gf_bar(~month, fill = ~tip,  data = taxi_modified) %>%
   gf_labs(title = "Plot D: Counts of Tips by Month")
 ```
 
-# Pokémon 
+# Pokémon
 
 ```{r}
 pokemon <- fromJSON("https://calmcode.io/static/data/pokemon.json")
@@ -148,7 +148,7 @@ print(data_dictionary)
 
 ```
 
-## Questions 
+## Questions
 
 ```{r}
 pokemon_summary <- pokemon %>%
@@ -161,9 +161,9 @@ pokemon_summary
 
 average hp and attack for each type
 
-### Abandoning this data set as list needs to be converted into factor to get accurate data viz. 
+### Abandoning this data set as list needs to be converted into factor to get accurate data viz.
 
-# Fertility DataSet 
+# Fertility DataSet
 
 ```{r}
 fertility<- read_delim("../../data/Fertility.csv")
@@ -217,7 +217,7 @@ mutate(
 glimpse(fertility_modified)
 ```
 
-## Bar graphs 
+## Bar graphs
 
 ```{r}
 gf_bar(~morekids, data = fertility_modified) %>%
