@@ -1,0 +1,128 @@
+---
+title: "A-3 streams"
+format:
+  html:
+    css: styles.css
+---
+
+------------------------------------------------------------------------
+
+<button>[Reading the Data]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r setup, echo=FALSE}
+suppressMessages({
+#| label: setup 
+library(tidyverse)
+library(ggformula)
+library(mosaic)
+library(crosstable)
+library(broom)
+library(ggformula)
+library(infer) 
+library(patchwork) 
+library(ggprism) 
+library(supernova) 
+library(DescTools)
+})
+```
+
+# Reading
+
+```{r}
+streams <-read.csv("../../data/Art, Design, and Vocation are all diff-different(Sheet1).csv")
+print(head(streams))
+```
+
+## \## Research Question: **Art, Design, and Vocation are all different?**
+
+# Munging
+
+```{r}
+streams_modified <- streams %>%
+  mutate(Gender = as.factor(Gender)) %>%
+  mutate(Degree = as.factor(Degree))%>%
+  mutate(Letter.Grade = as.factor(Letter.Grade))%>%
+    mutate(Course = as.factor(Course))
+
+```
+
+# EDA
+
+```{r}
+gf_histogram(~Score,
+  fill = ~Degree, 
+  data = streams_modified, 
+  alpha = 0.5,  
+  bins = 25  
+) %>%
+  gf_vline(xintercept = ~ mean(Score, na.rm = TRUE),  
+            linetype = "dashed", color = "red") %>%
+  gf_labs(
+    title = "Histogram of scores across degrees",
+    x = "Scores", 
+    y = "Count"
+  ) %>%
+  gf_text(
+    label = "Overall Mean", 
+    x = mean(streams_modified$Score, na.rm = TRUE),  
+    y = 2, 
+    color = "red"
+  ) %>%
+  gf_refine(guides(fill = guide_legend(title = ""))) 
+
+```
+
+```{r}
+gf_boxplot(
+  data = streams_modified,
+  Score ~ Degree,
+  fill = ~Degree,
+  alpha = 0.5
+) %>%
+  gf_vline(xintercept = ~ mean(Score, na.rm = TRUE)) %>%
+  gf_labs(
+    title = "Boxplots of scoress",
+    x = "Degree", 
+    y = "Scores",
+   
+  ) %>%
+  gf_refine(
+    scale_x_discrete(guide = "prism_bracket"),
+    guides(fill = guide_legend(title = ""))
+  )
+```
+
+### - median score for bdes is the highest, lowest is b.voc and bfa lies between the two
+
+-   outliers for b.voc
+
+-   bvoc distribution is skewed left and bdes skewed right with high concentration of scores on higher end
+
+-   bfa distribuion seems to be evenly spread out
+
+# Anova
+
+```{r}
+streams_anova <- aov(Score ~ Degree, data = streams_modified)
+
+supernova::pairwise(streams_anova,
+  correction = "Bonferroni", # Try "Tukey"
+  alpha = 0.05, # 95% CI calculation
+  var_equal = TRUE, # We'll see
+  plot = TRUE
+)
+```
+
+### Inferences
+
+-   significant difference between the mean scores of B.FA and B.Des.
+
+-   also a significant difference between the mean scores of B.Voc and B.Des and B.Voc and B.FA.
+
+    <div>
+
+    # B.Des \> B.FA \> B.Voc
+
+    </div>

@@ -1,0 +1,231 @@
+---
+title: "A3- cartoons"
+format:
+  html:
+    css: styles.css
+---
+
+------------------------------------------------------------------------
+
+<button>[Reading the Data]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r setup, echo=FALSE}
+suppressMessages({
+#| label: setup 
+library(tidyverse)
+library(ggformula)
+library(mosaic)
+library(crosstable)
+library(broom)
+library(ggformula)
+library(infer) 
+library(patchwork) 
+library(ggprism) 
+library(supernova) 
+library(DescTools)
+})
+```
+
+```{r}
+cartoons <-read.csv("../../data/cartoonsvs.csv")
+print(head(cartoons))
+```
+
+## \## Research Question: Which is better among Doraemon, Dragon Tales, and Chhota Bheem?
+
+<button>[Data Munging]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+library(dplyr)
+
+
+cartoons_modified <- cartoons %>%
+  mutate(Gender = as.factor(Gender)) %>%
+  mutate(Cartoon = as.factor(Cartoon))
+
+```
+
+```{r}
+colnames(cartoons_modified)
+```
+
+## Plotting Graphs for Eda
+
+```{r}
+
+gf_histogram(~Rating,
+  fill = ~Cartoon, 
+  data = cartoons_modified, 
+  alpha = 0.5,  
+  bins = 25  
+) %>%
+  gf_vline(xintercept = ~ mean(Rating, na.rm = TRUE),  
+            linetype = "dashed", color = "red") %>%
+  gf_labs(
+    title = "Histogram of Cartoon Ratings",
+    x = "Rating", 
+    y = "Count"
+  ) %>%
+  gf_text(
+    label = "Overall Mean", 
+    x = mean(cartoons_modified$Rating, na.rm = TRUE),  
+    y = 2, 
+    color = "red"
+  ) %>%
+  gf_refine(guides(fill = guide_legend(title = "Cartoon"))) 
+
+```
+
+```{r}
+gf_boxplot(
+  data = cartoons_modified,
+  Rating ~ Cartoon,
+  fill = ~Cartoon,
+  alpha = 0.5
+) %>%
+  gf_vline(xintercept = ~ mean(Rating, na.rm = TRUE)) %>%
+  gf_labs(
+    title = "Boxplots of Cartoon Ratings",
+    x = "Cartoon", 
+    y = "Rating",
+   
+  ) %>%
+  gf_refine(
+    scale_x_discrete(guide = "prism_bracket"),
+    guides(fill = guide_legend(title = "Cartoon"))
+  )
+```
+
+### Observations
+
+Doraemon with the highest mean seems to be the most popular, also shows wide variability
+
+Dragon tales - less popular than the other two
+
+Chota Bheem shows a smaller range of ratings
+
+Outliers for Doraemon and Dragon tales
+
+.
+
+# Anova
+
+```{r}
+cartoon_anova <- aov(Rating ~ Cartoon, data = cartoons_modified)
+
+supernova::pairwise(cartoon_anova,
+  correction = "Bonferroni", # Try "Tukey"
+  alpha = 0.05, # 95% CI calculation
+  var_equal = TRUE, # We'll see
+  plot = TRUE
+)
+```
+
+-   Doraemon and Chota bheem have significantly different mean ratings.
+
+-   Dragon Tales and Chota bheem have significantly different mean ratings.
+
+-   There is no significant difference in mean ratings between Dragon Tales and Doraemon.
+
+    ## Doraemon is the highest rated followed by cHOTA bheem and then Dragon tales
+
+```{r}
+supernova::equation(cartoon_anova)
+```
+
+# Checking Assumptions
+
+## Check for normality
+
+```{r}
+shapiro.test(x = cartoons_modified$Rating)
+```
+
+checking normality for each cartoon
+
+```{r}
+normality_results <- cartoons_modified %>%
+  group_by(Cartoon) %>%
+  summarise(shapiro_p_value = shapiro.test(Rating)$p.value)
+
+print(normality_results)
+```
+
+-   based on p values, only the data for chota bheem is normally distributed
+
+### Residual post-model:
+
+```{r}
+cartoon_anova$residuals %>%
+  as_tibble() %>%
+  gf_dhistogram(~value, data = .) %>%
+  gf_fitdistr()
+##
+cartoon_anova$residuals %>%
+  as_tibble() %>%
+  gf_qq(~value, data = .) %>%
+  gf_qqstep() %>%
+  gf_qqline()
+##
+shapiro.test(cartoon_anova$residuals)
+```
+
+-   residuals are also not normally distributed
+
+## Check for Variance
+
+```{r}
+cartoons_modified %>%
+  group_by(Cartoon) %>%
+  summarise(variance = var(Rating))
+
+# Perform Levene's Test for homogeneity of variances
+DescTools::LeveneTest(Rating ~ Cartoon, data = cartoons_modified)
+
+# Perform Fligner-Killeen Test for homogeneity of variances
+fligner.test(Rating ~ Cartoon, data = cartoons_modified)
+```
+
+### both tests indicate that variances are approx equal.
+
+# Anova using permutation
+
+```{r}
+observed_infer <-
+  cartoons_modified %>%  
+  specify(Rating ~ Cartoon) %>%
+  hypothesise(null = "independence") %>%
+  calculate(stat = "F")
+
+observed_infer
+
+```
+
+```{r}
+null_dist_infer <- cartoons_modified %>%
+  specify(Rating ~ Cartoon) %>%
+  hypothesise(null = "independence") %>%
+  generate(reps = 4999, type = "permute") %>%
+  calculate(stat = "F")
+##
+head(null_dist_infer, n = 15)
+```
+
+```{r}
+##
+null_dist_infer %>%
+  visualise(method = "simulation") +
+  shade_p_value(obs_stat = observed_infer$stat, direction = "right") +
+  scale_x_continuous(trans = "log10", expand = c(0, 0)) +
+  coord_cartesian(xlim = c(0.2, 500), clip = "off") +
+  annotation_logticks(outside = FALSE) 
+
+```
+
+based on the infer based permutation test, the observed test statistic is not unusual and we fail to reject the null hypothesis- ???
+
+# Based on pairwise comparisons though...Doraemon \> Chota Bheem \> Dragon Tales

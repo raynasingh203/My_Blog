@@ -4,12 +4,7 @@ author: "Rayna"
 format:
   html:
     theme: cosmo
-  
-    
-
 ---
-
-
 
 # **Introduction**
 
@@ -22,6 +17,9 @@ format:
 library(tidyverse)
 library(ggformula)
 library(babynames)
+
+
+
 ```
 
 ```{r}
@@ -54,4 +52,3 @@ babynames %>%  filter(name=="Radhika") %>%
 babynames %>% filter(name == "Preeti" | name == "Pretty")
 
 ```
-

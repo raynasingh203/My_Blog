@@ -1,0 +1,227 @@
+---
+title: "A-3 pocketmoney"
+format:
+  html:
+    css: styles.css
+ORDER: 20
+---
+
+------------------------------------------------------------------------
+
+<button>[Reading the Data]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r setup, echo=FALSE}
+suppressMessages({
+#| label: setup 
+library(tidyverse)
+library(ggformula)
+library(mosaic)
+library(crosstable)
+library(broom)
+library(ggformula)
+})
+```
+
+```{r}
+Pocket_money <-read.csv("../../data/Pocket_money.csv")
+print(head(Pocket_money))
+```
+
+------------------------------------------------------------------------
+
+## Research Question: Is there a significant difference in the average daily pocket money spent by boys and girls?
+
+------------------------------------------------------------------------
+
+<button>[Examining and Summarising]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+inspect(Pocket_money)
+```
+
+```{r}
+Pocket_money %>% crosstable(Money_spent~Gender) %>% as_flextable()
+```
+
+```{r}
+mosaic::t_test(Money_spent~Gender, data=Pocket_money)  %>% broom::tidy()
+```
+
+------------------------------------------------------------------------
+
+<button>[Data Munging]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+library(dplyr)
+
+
+pm_modified <- Pocket_money %>%
+  mutate(Gender = as.factor(Gender))
+
+```
+
+#### Qual variables- Gender
+
+#### Quant variable(s)- Money_spent
+
+------------------------------------------------------------------------
+
+<button>[Plotting Graphs]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+
+pm_modified %>%
+  gf_density(
+    ~ Money_spent,
+    fill = ~ Gender,
+    alpha = 0.5,
+    title = "Money Spent Densities",
+    subtitle = "Male vs Female"
+  )
+##
+pm_modified %>%
+  gf_boxplot(
+    Money_spent ~ Gender,
+    fill = ~ Gender,
+    alpha = 0.5,
+    title = "Money Spent Box Plots",
+    subtitle = "Male vs Female"
+  ) %>% gf_refine(scale_y_log10()) 
+##
+pm_modified %>% count(Gender)
+pm_modified %>% 
+  group_by(Gender) %>% 
+  summarise(mean = mean(Money_spent))
+```
+
+### Observations
+
+-   Outliers in both groups
+-   Based on median, females spend more money than males.
+-   In the density plot we can see that the distributions overlap to quite an extent, females spend more and there is more variability in male spending.
+
+------------------------------------------------------------------------
+
+<button>[Checking Assumptions]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+## Hypotheses:
+
+-   H0​: μ male spending​=μ female spending
+
+-   Ha​: μ male spending ≠ μ female spending
+
+## - Check for Normality
+
+```{r}
+pm_modified %>%
+  gf_density( ~ Money_spent,
+              fill = ~ Gender,
+              alpha = 0.5,
+              title = "Money_spent by males and females") %>%
+  gf_facet_grid(~ Gender) %>% 
+  gf_fitdistr(dist = "dnorm")
+```
+
+-   both are right skewed and have sharp peaks...
+
+```{r}
+shapiro.test(pm_modified$Money_spent[pm_modified$Gender== "Female"])
+```
+
+p value-\> 0.0000000000008961
+
+```{r}
+shapiro.test(pm_modified$Money_spent[pm_modified$Gender== "Male"])
+```
+
+p value-\> 0.00000000001136
+
+#### *we can reject the null hypothesis and go forward with our alternative hypothesis based on w values, we can say data is not normally distributed*
+
+## - Check for Variances
+
+```{r}
+var.test(Money_spent ~ Gender, data = pm_modified, 
+         conf.int = TRUE, conf.level = 0.95) %>% 
+  broom::tidy()
+```
+
+#### *p value= 0.17 hence variances can be considered approximately equal. we do not reject the null hypothesis.*
+
+### -
+
+### Difference in Means:
+
+```{r}
+obs_diff_pm <- diffmean(Money_spent ~ Gender, data = pm_modified) 
+obs_diff_pm
+```
+
+------------------------------------------------------------------------
+
+## <button>[Inferences]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+# <u>-Using Parametric t.test</u>
+
+```{r}
+mosaic::t_test(Money_spent ~Gender, data = pm_modified) %>% 
+  broom::tidy()
+```
+
+### with a high p value of 0.8, we can say that means of male and female pocket money spendings are not significantly different from one another.
+
+# <u>-Using Mann-Whitney </u>
+
+--data variables not distributed normally
+
+```{r}
+wilcox.test(Money_spent ~ Gender, data = pm_modified, 
+            conf.int = TRUE, 
+            conf.level = 0.95) %>% 
+  broom::tidy()
+```
+
+### p value of 0.3, we fail to reject our null hypothesis. 
+
+# <u>-Permutation </u>
+
+```{r}
+null_dist_pm <- 
+  do(4999) * diffmean(data =pm_modified, Money_spent ~ shuffle(Gender))
+head(null_dist_pm, n = 15)
+```
+
+```{r}
+gf_histogram(data = null_dist_pm, ~ diffmean, bins = 25) %>%
+  gf_vline(xintercept = obs_diff_pm, 
+           colour = "blue", linewidth = 2,
+           title = "Null Distribution by Permutation", 
+           subtitle = "Histogram") %>% 
+  gf_labs(x = "Difference in Means")
+###
+gf_ecdf(data = null_dist_pm, ~ diffmean, 
+        linewidth = 2) %>%
+  gf_vline(xintercept = obs_diff_pm, 
+           colour = "blue", linewidth = 1,
+           title = "Null Distribution by Permutation", 
+           subtitle = "Cumulative Density") %>% 
+  gf_labs(x = "Difference in Means")
+```
+
+```{r}
+1-prop1(~ diffmean <= obs_diff_pm, data = null_dist_pm)
+```
+
+### no strong difference between the groups being compared, female and male pocket money spemdings are approx same. 

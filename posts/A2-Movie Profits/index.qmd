@@ -120,7 +120,7 @@ ggplot(median_profit_data, aes(x = median_profit_ratio, y = genre)) +
 
 -   genre and median of profit ratio are the two variables being plotted
 
--    action and horror
+-   action and horror
 
 -   facet_wrap(\~ distributor) to get separate plots for each distributor
 

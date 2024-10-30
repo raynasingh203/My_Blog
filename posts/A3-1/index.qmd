@@ -1,0 +1,243 @@
+---
+title: "A-3 tips"
+format:
+  html:
+    css: styles.css
+ORDER: 10
+---
+
+------------------------------------------------------------------------
+
+<button>[Reading the Data]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r setup, echo=FALSE}
+suppressMessages({
+#| label: setup 
+library(tidyverse)
+library(ggformula)
+library(mosaic)
+library(crosstable)
+library(broom)
+library(ggformula)
+})
+```
+
+```{r}
+tip <-read.csv("../../data/tip.csv")
+print(head(tip))
+```
+
+## Research Question: Is there a significant difference in the average tip amount given by non-vegetarians compared to vegetarians?
+
+------------------------------------------------------------------------
+
+<button>[Examining and Summarising]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+inspect(tip)
+```
+
+```{r}
+tip %>% crosstable(Tip~Food.preferance) %>% as_flextable()
+```
+
+```{r}
+mosaic::t_test(Tip~Food.preferance, data=tip)  %>% broom::tidy()
+```
+
+```{r}
+mosaic::t_test(Tip~Gender, data=tip)  %>% broom::tidy()
+```
+
+------------------------------------------------------------------------
+
+<button>[Data Munging]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+library(dplyr)
+
+
+tip_modified <- tip %>%
+  mutate(Food.preferance = as.factor(Food.preferance))
+
+```
+
+#### Qual variables- Gender, Food_Preferance (food_preference\*)
+
+#### Quant variable(s)- Tip
+
+------------------------------------------------------------------------
+
+<button>[Plotting Graphs]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+```{r}
+tip_modified %>% gf_histogram(~Tip|Food.preferance)
+```
+
+```{r}
+tip_modified %>%
+  gf_density(
+    ~ Tip,
+    fill = ~ Food.preferance,
+    alpha = 0.5,
+   
+  )
+```
+
+### Observations
+
+-   Most of tips are clustered around the lower end ; Right skew in both cases.
+
+<!-- -->
+
+-   Tips above 50 are rare. One notable outlier in the vegetarian group.
+
+-   Vegetarians have a broader distribution
+
+<!-- -->
+
+-   Non-vegetarian tips are clustered around 10-25 range, they seem to tip more in this range.
+
+------------------------------------------------------------------------
+
+<button>[Checking Assumptions]{.button_top}</button>
+
+------------------------------------------------------------------------
+
+## Hypotheses:
+
+-   H0​: μ non-veg​=μ veg​
+
+-   Ha​: μ non-veg​ ≠ μ veg​
+
+## - Check for Normality
+
+```{r}
+
+tip_modified %>%
+  gf_density( ~ Tip,
+              fill = ~ Food.preferance,
+              alpha = 0.5,
+              title = "Tips given by non-vegetarians and vegetarians") %>%
+  gf_facet_grid(~ Food.preferance) %>% 
+  gf_fitdistr(dist = "dnorm") 
+```
+
+Non-vegetarians- Right skewed distribution Vegetarians - Also right skewed but less skewed when compared with non-vegetarians
+
+```{r}
+
+shapiro.test(tip_modified$Tip[tip_modified$Food.preferance == "Non-veg"])
+
+```
+
+p value= 0.000002747
+
+```{r}
+
+shapiro.test(tip_modified$Tip[tip_modified$Food.preferance == "Veg"])
+```
+
+p value = 0.0000001661
+
+#### *p-value for both the groups (veg and non-veg) is less than 0.05, as a result we reject the null hypothesis, the data for both groups is not normally distributed.*
+
+## - Check for Variances
+
+```{r}
+var.test(Tip ~ Food.preferance, data = tip_modified, 
+         conf.int = TRUE, conf.level = 0.95) %>% 
+  broom::tidy()
+```
+
+#### 0.00554363 ***\< 0.05, we reject the null hypothesis***
+
+# -
+
+### Difference in Means:
+
+```{r}
+obs_diff_tips <- diffmean(Tip ~ Food.preferance, data = tip_modified) 
+obs_diff_tips
+```
+
+------------------------------------------------------------------------
+
+## <button>[Inferences]{.button_top}</button>
+
+# <u>-Using Parametric t.test</u>
+
+## (\*data is not Gaussian, variances are different)
+
+--a non-parametric test would be more suitable
+
+--let's check what we get regardless
+
+```{r}
+mosaic::t_test(Tip ~Food.preferance, data = tip_modified) %>% 
+  broom::tidy()
+```
+
+### **p value: 0.6**
+
+#### [we fail to reject the null hypothesis, no significant statistical difference between the means of non-vegetarian and vegetarian groups when it comes to tipping.]{style="color: #98B926;"}
+
+------------------------------------------------------------------------
+
+# <u>-Permutation test</u>
+
+```{r}
+null_dist_Tip <- 
+  do(4999) * diffmean(data =tip_modified, Tip ~ shuffle(Food.preferance))
+head(null_dist_Tip, n = 15)
+```
+
+```{r}
+gf_histogram(data = null_dist_Tip, ~ diffmean, bins = 25) %>%
+  gf_vline(xintercept = obs_diff_tips, 
+           colour = "pink", linewidth = 1,
+           title = "Null Distribution by Permutation", 
+           subtitle = "Histogram") %>% 
+  gf_labs(x = "Difference in Means")
+###
+gf_ecdf(data = null_dist_Tip, ~ diffmean, 
+        linewidth = 1) %>%
+  gf_vline(xintercept = obs_diff_tips, 
+           colour = "pink", linewidth = 1,
+           title = "Null Distribution by Permutation", 
+           subtitle = "Cumulative Density") %>% 
+  gf_labs(x = "Difference in Means")
+```
+
+```{r}
+1-prop1(~ diffmean <= obs_diff_tips, data = null_dist_Tip)
+```
+
+### The observed difference in tips is not beyond anythimg that we could generate with permutations; therefore, there is again no significant different in tips between the vegetarian and non vegetarian groups. We fail to reject the null hypothesis.
+
+#### --------------------------
+
+# <u>-Mann-Whitney Test</u>
+
+—data is not normally distributed (not Gaussian), and the variances of the two groups are significantly different. This indicates that the assumption of normality is not satisfied, while the assumption of equal variances is satisfied.
+
+-- we can do Wilcox.test (test of mean ranks)
+
+```{r}
+wilcox.test(Tip ~ Food.preferance, data = tip_modified, 
+            conf.int = TRUE, 
+            conf.level = 0.95) %>% 
+  broom::tidy()
+```
+
+#### p value= 0.8, we fail to reject our null hypothesis again.
+
+#### hence, there truly is no significant statistical difference between the means of non-veg and veg groups; tips given by both are similar enough.
